@@ -19,6 +19,9 @@ app.use(cors({
 
 // Body parser (raw for Stripe webhooks must come BEFORE json())
 app.use('/api/webhooks', express.raw({ type: 'application/json' }));
+// Stripe webhook (raw body required)
+const { stripeWebhook } = require('./webhooks/stripe.webhook');
+app.post('/api/webhooks/stripe', stripeWebhook);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
@@ -29,6 +32,7 @@ app.use('/api/draws', require('./routes/draw.routes'));
 app.use('/api/charities', require('./routes/charity.routes'));
 app.use('/api/subscriptions', require('./routes/subscription.routes'));
 app.use('/api/winners', require('./routes/winner.routes'));
+app.use('/api/notifications', require('./routes/notification.routes'));
 app.use('/api/admin', require('./routes/admin.routes'));
 
 // Health check
